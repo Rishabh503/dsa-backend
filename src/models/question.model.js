@@ -36,7 +36,7 @@ export const questionSchema=new mongoose.Schema({
         }       
     ],
     starred:String,
-    status:String,
+    solvedBy:String,
     notes:[
         {
              type:Schema.Types.ObjectId,

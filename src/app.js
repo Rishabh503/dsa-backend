@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 
 
+
 export const app=express();
 
 // isme 2 -3 steps krne h
@@ -26,7 +27,12 @@ app.use(express.static("public"))
 
 //cookie parser
 app.use(cookieParser())
+import { UserRouter } from "./routers/user.router.js";
+import { ApiError } from "./utils/ApiError.js";
+import { questionRouter } from "./routers/question.router.js";
+app.use("/api/v1/user",UserRouter)
 
+app.use('/api/v1/question/',questionRouter)
 
 app.use((err, req, res, next) => {
     console.error("Global Error Handler:", err);
