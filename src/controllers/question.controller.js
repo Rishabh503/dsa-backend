@@ -52,3 +52,29 @@ export const changeStatus = asyncHandler(async (req,res) => {
     return res.status(200).json(new ApiResponse(200,{},"updated succesfully"))
 })
 
+
+export const changeCurrentPassword=asyncHandler(async (req,res)=>{
+    const {oldPassword,newPassword}=req.body;
+    // console.log(req.body)
+    if(!oldPassword || !newPassword) throw new ApiError(401,"fill all fields");
+    // console.log(req.user)
+    console.log("Token from request:", req.cookies?.accessToken || req.header("Authorization"));
+    console.log(req.user)
+    const userid=await req.user?._id;
+    console.log(userid)
+    const user= await User.findById(userid)
+
+    if(!user) throw new ApiError(401,"user finding error")
+
+    const validOldPassword=await user.isPasswordCorrect(oldPassword);
+    if(!validOldPassword) throw new ApiError(401,"old password is wronfg")
+
+    user.password=newPassword;
+
+    await user.save({validateBeforeSave:false});
+
+    return res.status(201)
+    .json(new ApiResponse(200,{},"password changed succesfully"))
+
+
+})
