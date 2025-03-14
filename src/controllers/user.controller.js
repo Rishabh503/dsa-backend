@@ -37,7 +37,7 @@ export const oneUser=asyncHandler(async(req,res)=>{
     const userId=req.params.userId;
     if(!userId) throw new ApiError(404,"user id not receibed")
     
-    const user=await User.findById(userId).populate("questions");
+    const user=await User.findById(userId).populate("questions").populate("reminders");
     if(!user) throw new ApiError(402,"couldnt find the user ")
     
     return res.status(200).json(new ApiResponse(200,user,"user found"))

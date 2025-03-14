@@ -35,7 +35,7 @@ export const questionSchema=new mongoose.Schema({
             ref:"Reminder"
         }       
     ],
-    starred:String,
+    starred:Boolean,
     solvedBy:String,
     notes:[
         {

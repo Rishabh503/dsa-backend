@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import { Question } from "../models/question.model.js";
+import { Reminder } from "../models/reminder.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -78,3 +80,66 @@ export const changeCurrentPassword=asyncHandler(async (req,res)=>{
 
 
 })
+
+export const newReminder=asyncHandler(async(req,res)=>{
+    // question user date status 
+
+    const questionId=req.params.questionId
+    // console.log("passed qid")
+    if(!questionId) throw new ApiError(402,"error extracting the questionId")
+    const question=await Question.findById(questionId);
+    if(!question) throw new ApiError(402,"invalid question details or question doesnt exist")
+        console.log(question)
+
+
+    const userId=req.params.userId
+    if(!userId) throw new ApiError(402,"error extracting the userId")
+    const user=await User.findById(userId);
+    if(!user) throw new ApiError(402,"invalid user details or user doesnt exist")
+    const {date}=req.body
+console.log(date)
+    if(!date) throw new ApiError(404,"fill the date")
+
+    const reminder=await Reminder.create({
+        question:question,
+        user:user,
+        date:date,
+        status:"pending"
+    })
+
+    const createdReminder=await Reminder.findById(reminder);
+    if(!createdReminder) throw new ApiError(404,"errror creating the reminder ")
+    user.reminders=user.reminders.push(createdReminder)
+    await user.save({validateBeforeSave:false})
+    return res.status(200).json(new ApiResponse(200,createdReminder,"reminder has been created"))
+})
+
+
+export const markAsStarred = asyncHandler(async (req, res) => {
+    const { questionId, userId } = req.params;
+    if (!questionId) throw new ApiError(402, "Error extracting the questionId");
+    if (!userId) throw new ApiError(402, "Error extracting the userId");
+
+    const question = await Question.findById(questionId);
+    if (!question) throw new ApiError(402, "Invalid question details or question doesn't exist");
+
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(402, "Invalid user details or user doesn't exist");
+
+    const { starred } = req.body;
+    if (starred === undefined) throw new ApiError(404, "Fill the details");
+
+    const questionExists = user.starred.some(ques => ques.toString() === questionId);
+
+    if (starred) {
+        if (!questionExists) {
+            user.starred.push(question._id);
+        }
+    } else {
+        user.starred = user.starred.filter(ques => ques.toString() !== questionId);
+    }
+
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json(new ApiResponse(200, user, "Marked successfully"));
+});
