@@ -80,7 +80,8 @@ export const login = asyncHandler(async (req,res)=>{
 
     const options={
         httpOnly:true
-        ,secure:true
+        ,secure:true,
+        sameSite:"None"
     }
     
 
@@ -113,7 +114,7 @@ export const loggoutUser=asyncHandler(async (req,res)=>{
     const options={
         httpOnly:true,
         secure:true,
-        // sameSite:'None'
+        sameSite:'None'
     }
 
     return res.status(200)
@@ -123,6 +124,6 @@ export const loggoutUser=asyncHandler(async (req,res)=>{
 })
 
 export const userInfo=asyncHandler(async(req,res)=>{
-    const user =await User.findById(req.user._id).select('-password -refreshToken')
+    const user =await User.findById(req.user._id).select('-password -refreshToken').populate('reminders')
     return res.status(200).json(new ApiResponse(200,user,"user details are these"))
 })

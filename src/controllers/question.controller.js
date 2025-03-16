@@ -143,3 +143,18 @@ export const markAsStarred = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, user, "Marked successfully"));
 });
+
+
+export const changeReminderStatus=asyncHandler(async(req,res)=>{
+    
+    const reminderId=req.params.reminderId;
+    if(!reminderId) throw new ApiError(402,"error reminderId not valid or not found")
+    const reminder=await Reminder.findById(reminderId);
+    if(!reminder) throw new ApiError(402,"error reminder not valid or not found")
+    const status=req.body;
+console.log(status.status)
+    if(!status) throw new ApiError(402,"couldnt recieve the status from the frontend")
+    reminder.status=status.status;
+    await reminder.save({validateBeforeSave:false});
+    return res.status(200).json(new ApiResponse(200,reminder,"remindere has been updated"))
+})

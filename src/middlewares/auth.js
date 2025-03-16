@@ -19,6 +19,7 @@ export const verifyJWT=asyncHandler(async (req,res,next)=>{
         next();
     } 
     catch (error) {
+        console.log(error)
         throw new ApiError(401,"error in verifying jwt")
     }
 })
