@@ -16,7 +16,7 @@ app.use(cors({
     origin:"https://dsa-frontend-one.vercel.app",
     credentials:true
 }))
-
+//changes
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin",'https://dsa-frontend-one.vercel.app');
     res.header("Access-Control-Allow-Credentials", "true");
