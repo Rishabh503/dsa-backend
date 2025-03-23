@@ -12,13 +12,21 @@ export const app=express();
 // config cors cookieparser and 2-3 express middlewares 
 
 // cors
+const allowedOrigins = [process.env.CORS, "http://localhost:5173"]; // Add frontend URL here
+
 app.use(cors({
-    origin:"https://dsa-frontend-one.vercel.app",
-    credentials:true
-}))
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 //changes
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin",'https://dsa-frontend-one.vercel.app');
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
     res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
