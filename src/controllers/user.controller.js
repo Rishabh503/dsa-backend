@@ -79,7 +79,7 @@ export const login = asyncHandler(async (req,res)=>{
     console.log(accessToken,refreshToken)
 
     const options={
-        httpOnly:true
+        httpOnly:false
         ,secure:true,
         sameSite:"None"
     }
