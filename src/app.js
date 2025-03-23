@@ -12,7 +12,7 @@ export const app=express();
 // config cors cookieparser and 2-3 express middlewares 
 
 // cors
-const allowedOrigins = [process.env.CORS, "http://localhost:5173"]; // Add frontend URL here
+const allowedOrigins = [process.env.CORS, "http://localhost:5173","https://dsa-frontend-one.vercel.app"]; // Add frontend URL here
 
 app.use(cors({
     origin: function (origin, callback) {
